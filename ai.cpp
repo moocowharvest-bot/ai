@@ -324,7 +324,7 @@ std::string getPose()
 //	for (int i = 0; i < kNumberOfWomen; i++) {
 		
 	std::string woman;
-	woman += "voluptuous ";
+	woman += " voluptuous";
 	if (asleep) woman += " sleeping ";
 	woman += pickRandomString({"college student"});
 #if 0	
