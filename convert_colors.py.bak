@@ -1,0 +1,124 @@
+#!/usr/bin/env python3
+"""
+convert_colors.py
+
+Replace English color words in a text file with other random English color words.
+
+Usage:
+  python convert_colors.py input.txt -o output.txt
+  python convert_colors.py input.txt --inplace
+
+Options:
+  --seed N       Seed RNG for reproducible replacements
+  --inplace      Overwrite input file
+"""
+import argparse
+import random
+import re
+from collections import Counter
+from pathlib import Path
+
+COLORS = [
+	"darkblue", "darkpurple", "white", "pink", "dark_gray", "burgundy", "black", "dark_green"
+]
+
+HAIR = [
+	"blonde", "light brown", "brown"
+]
+
+
+def preserve_case(original: str, replacement: str) -> str:
+    if original.isupper():
+        return replacement.upper()
+    if original[0].isupper() and original[1:].islower():
+        return replacement.capitalize()
+    return replacement.lower()
+
+
+def build_pattern(colors):
+    # word-boundary match, case-insensitive
+    esc = [re.escape(c) for c in colors]
+    return re.compile(r"\b(" + r"|".join(esc) + r")\b", re.IGNORECASE)
+
+
+def convert_colors(text: str, rng: random.Random, colors=COLORS):
+    pattern = build_pattern(colors)
+    counts = Counter()
+
+    def repl(m):
+        orig = m.group(0)
+        key = orig.lower()
+        choices = [c for c in colors if c.lower() != key]
+        if not choices:
+            return orig
+        new = rng.choice(choices)
+        counts[key] += 1
+        return preserve_case(orig, new)
+
+    out = pattern.sub(repl, text)
+    return out, counts
+
+def convert_hair(text: str, rng: random.Random, hair=HAIR):
+    pattern = build_pattern(hair)
+    counts = Counter()
+
+    def repl(m):
+        orig = m.group(0)
+        key = orig.lower()
+        choices = [c for c in hair if c.lower() != key]
+        if not choices:
+            return orig
+        new = rng.choice(choices)
+        counts[key] += 1
+        return preserve_case(orig, new)
+
+    out = pattern.sub(repl, text)
+    return out, counts
+
+
+def main():
+    p = argparse.ArgumentParser()
+    p.add_argument("input", help="Input text file")
+    p.add_argument("-o","--output", help="Output file (omit for stdout)")
+    p.add_argument("--inplace", action="store_true", help="Overwrite input file")
+    p.add_argument("--seed", type=int, help="Random seed for reproducibility")
+    args = p.parse_args()
+
+    if args.inplace and args.output:
+        p.error("--inplace and --output are mutually exclusive")
+
+    rng = random.Random(args.seed) if args.seed is not None else random.Random()
+
+    inp = Path(args.input)
+    if not inp.exists():
+        print(f"Input file not found: {inp}")
+        raise SystemExit(2)
+
+    txt = inp.read_text(encoding="utf-8")
+    newtxt, counts_colors = convert_colors(txt, rng)
+    newertxt, counts_hair = convert_hair(newtxt, rng)
+
+    # combine counts from both conversion passes
+    counts = counts_colors + counts_hair
+
+    if args.inplace:
+        inp.write_text(newertxt, encoding="utf-8")
+        outpath = inp
+    elif args.output:
+        outpath = Path(args.output)
+        outpath.write_text(newertxt, encoding="utf-8")
+    else:
+        print(newertxt)
+        outpath = None
+
+    print("--- Replacement summary ---")
+    total = sum(counts.values())
+    print(f"Total replacements: {total}")
+    for k, v in counts.most_common():
+        print(f"{k}: {v}")
+    if outpath:
+        print(f"Wrote: {outpath}")
+
+
+if __name__ == '__main__':
+    main()

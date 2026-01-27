@@ -1,0 +1,23 @@
+{
+  "terminal.integrated.profiles.windows": {
+    "MSVC Developer PowerShell": {
+      "path": "powershell.exe",
+      "args": [
+        "-NoExit",
+        "-Command",
+        "& 'C:\\PROGRA~2\\MICROS~2\\18\\BUILDT~1\\Common7\\Tools\\Launch-VsDevShell.ps1' -Arch amd64 -HostArch amd64"
+      ],
+      "icon": "terminal-powershell"
+    },
+    "MSVC Developer Command Prompt": {
+      "path": "cmd.exe",
+      "args": [
+        "/k",
+        "C:\\PROGRA~2\\MICROS~2\\18\\BUILDT~1\\Common7\\Tools\\VsDevCmd.bat",
+        "-arch=x64",
+        "-host_arch=x64"
+      ],
+      "icon": "terminal-cmd"
+    }
+  }
+}

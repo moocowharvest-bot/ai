@@ -1,0 +1,73 @@
+#!/usr/bin/env python3
+import subprocess
+import sys
+import shlex
+import os
+import threading
+
+AI_BIN = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ai")
+
+def run_ai(timeout=30):
+    try:
+        env = os.environ.copy()
+        env['NO_CLIPBOARD'] = '1'
+        result = subprocess.run([AI_BIN], stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=timeout, env=env, cwd=os.path.dirname(os.path.abspath(__file__)))
+        if result.returncode != 0:
+            return f"Error running {AI_BIN}: returncode={result.returncode}, stderr={result.stderr.decode('utf-8')}\n"
+        return result.stdout.decode('utf-8')
+    except subprocess.TimeoutExpired:
+        return f"Error: {AI_BIN} timed out after {timeout}s\n"
+    except Exception as e:
+        return f"Error running {AI_BIN}: {e}\n"
+
+# Non-GUI mode for testing: print output and exit
+if __name__ == '__main__':
+    if '--generate' in sys.argv:
+        print(run_ai())
+        sys.exit(0)
+
+    try:
+        import tkinter as tk
+        from tkinter.scrolledtext import ScrolledText
+    except Exception as e:
+        print('tkinter not available:', e)
+        sys.exit(1)
+
+    root = tk.Tk()
+    root.title('AI Generator')
+    # Make a compact square window that fits a large square button
+    size = 240
+    root.geometry(f'{size}x{size}')
+
+    # (No special WM tweaks — use default window behavior)
+
+    # Use only a single large square button centered in the window.
+    # The button shows a play icon (Unicode) instead of text.
+    play_icon = '\u25B6'  # ▶
+
+    def generate():
+        # Visual feedback: disable and show a spinner-like text
+        btn.config(state='disabled', text='...', bg='#FFA000')
+
+        def worker():
+            output = run_ai()
+
+            def finish():
+                try:
+                    root.clipboard_clear()
+                    root.clipboard_append(output)
+                    # success visual
+                    btn.config(text=play_icon, bg='#4CAF50')
+                except Exception:
+                    # failure visual
+                    btn.config(text=play_icon, bg='#D32F2F')
+                btn.config(state='normal')
+
+            root.after(0, finish)
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    btn = tk.Button(root, text=play_icon, command=generate, font=('Helvetica', 72), bg='#4CAF50', fg='white', bd=0)
+    btn.place(relx=0.5, rely=0.5, anchor='center', width=200, height=200)
+
+    root.mainloop()
