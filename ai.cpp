@@ -134,18 +134,16 @@ std::string getBody(std::string output)
 {
 	std::string body;
 
-	if (kNumberOfWomen == 1)
-//		if (asleep)
-//			body += "curves, limp, unconscious, ";
-//		else
-			body += "curves, limp, ";
-	else
-		body += "curves, "; 
-		
+	body += "((limp body)), ";
+	
+	body += "((curvy body)), ";
+	
 	body += "breathing heavily, ";
 	
 	if (kBodyFocusType != UPPER || output.find("carry") != std::string::npos) {
 		body += "((thick thighs)), ((thick calves)), ((short legs)), ";
+
+		body += "((wide hips, full hips, strong legs)), ";
 
 		if (output.find("socks") == std::string::npos)
 			body += "soles of feet, woman is barefoot, ";
@@ -281,7 +279,7 @@ std::string pickLower(std::string output)
 			"thong",
 			"unzipped " + pickRandomString(color) + "jeans exposing " + pickRandomString(color) + pickRandomString(material) + "panties",
 			"unzipped " + pickRandomString(color) + "pants exposing " + pickRandomString(color) + pickRandomString(material) + "panties",
-			"yoga pants in a gym",
+			"yoga pants",
 			"jeans",
 			"cheeky panties",
 			"socks, naked",
@@ -324,9 +322,10 @@ std::string getPose()
 //	for (int i = 0; i < kNumberOfWomen; i++) {
 		
 	std::string woman;
-	woman += " voluptuous";
+//	woman += " voluptuous";
 	if (asleep) woman += " sleeping ";
-	woman += pickRandomString({"college student"});
+//	woman += pickRandomString({"college student"});
+	woman += pickRandomString({"adult woman"});
 #if 0	
 	if (asleep)
 		newPose.push_back("(one " + woman + "), (((a blue monster cunnilingus the sleeping woman)))");
@@ -381,8 +380,8 @@ std::string getPose()
 				"((one" + woman + " is lying on bed",
 				"((one" + woman + " is lying on couch",
 				"((one" + woman + " is lying on a massage table",
-				"((one" + woman + " is sleeping in a dentist chair))",
-				"((one" + woman + " is sleeping in a comfy " + pickRandomString(chaircolor) + "chair))",
+				"((one" + woman + " is sitting in a dentist chair))",
+				"((one" + woman + " is sitting in a comfy " + pickRandomString(chaircolor) + "chair))",
 			});
 		}
 	}
@@ -406,7 +405,10 @@ std::string getPose()
 	pose += newestPose;
 
 //	if (kBodyFocusType != LOWER) {
-		if (pose.find("tentacle") == std::string::npos && pose.find("massaging") == std::string::npos)
+
+		if (pose.find("chair") != std::string::npos)
+			pose += "((woman's head is resting on the chair)), ";
+		else if (pose.find("tentacle") == std::string::npos && pose.find("massaging") == std::string::npos)
 			pose += "((woman's head is resting on a pillow)), ";
 				
 		pose += pickRandomString({
@@ -666,7 +668,7 @@ std::string getShot(std::string output)
 		} else if (output.find("on stomach") != std::string::npos) {
 			newShot.push_back("(((close-up of " + fondleTarget + ":1.3)))");
 			newShot.push_back("(((ass view, above view)))");
-			newShot.push_back("((overhead view of " + fondleTarget + "))");
+			newShot.push_back("(((close-up of " + fondleTarget + ":1.3))), (((overhead view:1.3)))");
 			newShot.push_back("((from below, rear view))");
 			newShot.push_back("((low angle rear shot of " + fondleTarget + "))");
 			newShot.push_back("(((low angle close-up of " + fondleTarget + ")))");
@@ -826,38 +828,6 @@ int main()
 		
 //loras are causing glitched images!
 //output += getLoras();
-
-	if (output.find("yoga") != std::string::npos) {
-		// Replace all occurrences
-		std::string oldStr2 = "pillow";
-		std::string newStr2 = "gym bench";
-		size_t pos2 = 0;
-		while ((pos2 = output.find(oldStr2, pos2)) != std::string::npos) {
-		    output.replace(pos2, oldStr2.length(), newStr2);
-		    pos2 += newStr2.length(); // Move past the replacement
-		}
-
-		// Replace all matches from the vector
-		std::string replacement2 = "gym bench";
-
-		for (const auto& item : outdoorFurniture) {
-		    size_t pos = 0;
-		    while ((pos = output.find(item, pos)) != std::string::npos) {
-		        output.replace(pos, item.length(), replacement2);
- 		       pos += replacement2.length();
- 		   }
-		}
-
-		for (const auto& item : indoorFurniture) {
-		    size_t pos = 0;
-		    while ((pos = output.find(item, pos)) != std::string::npos) {
-		        output.replace(pos, item.length(), replacement2);
- 		       pos += replacement2.length();
- 		   }
-		}
-
-		output += "(water bottle on bench), ";
-	}
 
 	if (output.find("far") != std::string::npos) {
 		// might need to remove face, mask and eyes closed stuff too
