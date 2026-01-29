@@ -161,7 +161,7 @@ std::string getBody(std::string output)
 	if (output.find("stomach") != std::string::npos)
 		body += "perfect small breasts, ";
 	else
-		body += "perfect voluptuous breasts, ";
+		body += pickRandomString({"perfect voluptuous breasts, ", "one exposed perfect voluptuous breast, "});
 	
 	if (kBodyFocusType != LOWER) {
 		body += "((thick prone limp arms:1.3)), ((short thick neck:1.3)), ";
@@ -636,7 +636,6 @@ std::string getShot(std::string output)
 			newShot.push_back("((pov from above))");
 			if (output.find("massage") == std::string::npos)
 				newShot.push_back("(from below)");
-				newShot.push_back("(((low angle close-up of " + fondleTarget + ")))");
 			if (kBodyFocusType == FULL) {
 				if (output.find("socks") == std::string::npos)
 					newShot.push_back("(((focus on feet, from below)))");
@@ -672,7 +671,6 @@ std::string getShot(std::string output)
 			newShot.push_back("((from below, rear view))");
 			newShot.push_back("((low angle rear shot of " + fondleTarget + "))");
 			if (output.find("massage") == std::string::npos)
-				newShot.push_back("(((low angle close-up of " + fondleTarget + ")))");
 			newShot.push_back("(((focus on " + fondleTarget + "))), (((rear view from below:1.5)))");
 			
 			if (kBodyFocusType == FULL || kBodyFocusType == LOWER) {
@@ -690,7 +688,6 @@ std::string getShot(std::string output)
 			newShot.push_back("(((front view)))");
 			newShot.push_back("(((head on view)))");
 			newShot.push_back("(((side view)))");
-			newShot.push_back("(((low angle close-up of " + fondleTarget + ")))");
 			newShot.push_back("((low angle shot of " + fondleTarget + "))");
 			if (asleep)
 				newShot.push_back("(((view of briefs:1.3))), (sleeping woman is wearing " + pickRandomString(color) + pickRandomString(material) + " panty briefs), ((spread legs))");
@@ -725,7 +722,6 @@ std::string getShot(std::string output)
 			newShot.push_back("(((side view)))");
 			newShot.push_back("(((head on view)))");
 			newShot.push_back("((low angle shot of " + fondleTarget + "))");
-			newShot.push_back("(((low angle close-up of " + fondleTarget + ")))");
 			if (asleep)
 				newShot.push_back("(((view of briefs:1.3))), (sleeping woman is wearing " + pickRandomString(color) + pickRandomString(material) + " panty briefs), ((spread legs))");
 			else
