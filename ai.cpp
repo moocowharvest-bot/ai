@@ -141,7 +141,7 @@ std::string getBody(std::string output)
 	body += "breathing heavily, ";
 	
 	if (kBodyFocusType != UPPER || output.find("carry") != std::string::npos) {
-		body += "((thick thighs)), ((thick calves)), ((short legs)), ";
+		body += "((thick thighs:1.5)), ((thick calves)), ((short legs)), ";
 
 		body += "((wide hips, full hips, strong legs)), ";
 
@@ -226,7 +226,7 @@ std::string pickUpper(std::string output)
 			"full coverage bikini with cleavage",
 			"open shirt, perfect breasts, no bra, chest, belly button",
 			"spaghetti strap minidress with cleavage",
-			"button down shirt, " + pickRandomString(color) + pickRandomString(material) + "skin-tight skirt",
+			"button down shirt, " + pickRandomString(color) + pickRandomString(material) + "tight skirt",
 		});
 	} else if (output.find("stomach") != std::string::npos) {
 		upper += pickRandomString({
@@ -283,7 +283,7 @@ std::string pickLower(std::string output)
 			"jeans",
 			"cheeky panties",
 			"socks, naked",
-			"skin-tight skirt",
+			"tight skirt",
 		});
 	}
 
@@ -636,6 +636,7 @@ std::string getShot(std::string output)
 			newShot.push_back("((pov from above))");
 			if (output.find("massage") == std::string::npos)
 				newShot.push_back("(from below)");
+				newShot.push_back("(((low angle close-up of " + fondleTarget + ")))");
 			if (kBodyFocusType == FULL) {
 				if (output.find("socks") == std::string::npos)
 					newShot.push_back("(((focus on feet, from below)))");
@@ -646,7 +647,6 @@ std::string getShot(std::string output)
 				newShot.push_back("(((focus on perfect breasts)))");
 			}
 			newShot.push_back("(((close-up of " + fondleTarget + ")))");
-			newShot.push_back("(((low angle close-up of " + fondleTarget + ")))");
 			newShot.push_back("(((close-up of " + fondleTarget + ":1.3))), (((overhead view:1.3)))");
 			newShot.push_back("((above view of " + fondleTarget + "))");
 			newShot.push_back("(((facing viewer)))");
@@ -671,7 +671,8 @@ std::string getShot(std::string output)
 			newShot.push_back("(((close-up of " + fondleTarget + ":1.3))), (((overhead view:1.3)))");
 			newShot.push_back("((from below, rear view))");
 			newShot.push_back("((low angle rear shot of " + fondleTarget + "))");
-			newShot.push_back("(((low angle close-up of " + fondleTarget + ")))");
+			if (output.find("massage") == std::string::npos)
+				newShot.push_back("(((low angle close-up of " + fondleTarget + ")))");
 			newShot.push_back("(((focus on " + fondleTarget + "))), (((rear view from below:1.5)))");
 			
 			if (kBodyFocusType == FULL || kBodyFocusType == LOWER) {
