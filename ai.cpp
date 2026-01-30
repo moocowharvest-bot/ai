@@ -93,6 +93,16 @@ float getRandomFloat(float lo, float hi)
 	return result;
 }
 
+std::string removeString(std::string str, const std::string& toRemove)
+{
+	size_t pos = 0;
+	while ((pos = str.find(toRemove, pos)) != std::string::npos)
+	{
+		str.erase(pos, toRemove.length());
+	}
+	return str;
+}
+
 std::string insertBreak()
 {
 	std::string result;
@@ -427,13 +437,11 @@ std::string getPose()
 			mouth.push_back("((sleepy expression)), ((woman is snoring)), ((parted lips:1.5)), ((highly detailed mouth, sexy lips, focus on mouth))");
 	}
 	mouth.push_back("(((woman is wearing " + pickRandomString(maskcolor) + pickRandomString(mouthMaskMaterial) + "mouth_mask)))");
-
-//	this might be good for the distorted far away faces
-//	mouth.push_back("(((face covered:1.9))), (((mouth covered:1.9)))");
+//	mouth.push_back("(((hidden " + pickRandomString(maskcolor) + pickRandomString(mouthMaskMaterial) + "mouth:1.9)))");
 
 	pose += pickRandomString(mouth) + ", ";
 
-	if (pose.find("covered") == std::string::npos) {
+	if (pose.find("hidden") == std::string::npos) {
 		if (asleep)
 			pose += "((sleeping woman has a round face)), ";
 		else	
@@ -826,9 +834,12 @@ int main()
 //loras are causing glitched images!
 //output += getLoras();
 
+	// remove face stuff (because of distortion) at some camera views
 	if (output.find("far") != std::string::npos) {
-		// might need to remove face, mask and eyes closed stuff too
-		output += "(((eyes covered:1.9))), (((face covered:1.9))), (((mouth covered:1.9))), ";
+		output = removeString(output, "woman has eyes closed, dark gray eye shadow, ");
+		output = removeString(output, "((sleeping woman has a round face)), ");
+		output = removeString(output, "((sleepy expression)), ((woman is snoring)), ((parted lips:1.5)), ((highly detailed mouth, sexy lips, focus on mouth))");
+		output += "(((hidden eyes:1.9))), (((hidden face:1.9))), (((hidden mouth:1.9))), ";
 	}
 
 	printf("%s", output.c_str());
